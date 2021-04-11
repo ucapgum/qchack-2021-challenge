@@ -27,4 +27,30 @@ def matrix_to_sycamore_operations(
                 an empty list.
         .
     """
-    return NotImplemented, []
+
+    ops = NotImplemented
+
+    if len(target_qubits) == 1:
+        ops = cirq.single_qubit_matrix_to_gates(matrix)
+        for i, x in enumerate(ops):
+            ops[i] = cirq.GateOperation(x, [target_qubits[0]])
+    
+    elif len(target_qubits) == 2:
+        ops = cirq.two_qubit_matrix_to_operations(
+            target_qubits[0],
+            target_qubits[1],
+            matrix,
+            allow_partial_czs=False,
+            atol=1e-4
+        )
+    
+    elif len(target_qubits) == 3:
+        ops = cirq.three_qubit_matrix_to_operations(
+            target_qubits[0],
+            target_qubits[1],
+            target_qubits[2],
+            matrix,
+            atol=1e-4
+        )
+
+    return ops, []
